@@ -1,0 +1,5 @@
+.env
+Raw/
+__pycache__/
+*.pyc
+logs/
