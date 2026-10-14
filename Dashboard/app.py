@@ -380,9 +380,8 @@ with t_class:
             st.info("No classing data for this selection.")
         else:
             desc(f"{comm} bales classed, {region_label}. Crop year starts {MONTHS[START - 1]}. Navy = {cy_label(cur_cy)}, red = last year.")
-            c1, c2, c3 = st.columns(3)
-            for col, mode, ttl, step in [(c1, "Raw", "Daily bales", 1), (c2, "Rolling mean", f"{win}-day average", 1),
-                                         (c3, "Cumulative", "Cumulative", 1)]:
+            c1, c2 = st.columns(2)
+            for col, mode, ttl, step in [(c1, "Rolling mean", f"{win}-day average", 1), (c2, "Cumulative", "Cumulative", 1)]:
                 per = {c: grid(ser, c, mode, win) for c in cys}
                 col.plotly_chart(band_chart(per, cys[-1], step, ttl), width="stretch")
             desc("Monthly bales, '000. Shade = rank within month. Italic = month in progress.")
