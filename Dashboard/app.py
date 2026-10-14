@@ -102,7 +102,8 @@ def pick_start_month():
     return m % 12 + 1
 
 
-START = pick_start_month()
+AUTO_START = pick_start_month()
+START = AUTO_START
 BASE = pd.Timestamp(2019, START, 1)
 
 
@@ -111,7 +112,7 @@ def cy_of(t):
 
 
 def cy_label(cy):
-    return f"{cy}/{str(cy + 1)[2:]}"
+    return f"{cy}/{str(cy + 1)[2:]}" if START > 1 else str(cy)
 
 
 def to_x(idx):
@@ -335,6 +336,9 @@ with st.sidebar:
     st.markdown("<div class='sb-caption'>US cotton classing, quality, spot and forward contracting - AMS MARS.</div>",
                 unsafe_allow_html=True)
     st.subheader("Filters")
+    START = MONTHS.index(st.selectbox("Crop year starts", MONTHS, index=AUTO_START - 1,
+                                      help=f"Auto: {MONTHS[AUTO_START - 1]} (first month with real classing volume).")) + 1
+    BASE = pd.Timestamp(2019, START, 1)
     comm = st.radio("Commodity", ["Upland", "Pima"], horizontal=True)
     kind_pick = st.radio("Region", ["US", "State", "Office"], horizontal=True)
     name = ""
@@ -359,7 +363,6 @@ with st.sidebar:
                 (f"{cy_label(uc)} to date", f"{a:,.0f}", "bales")]
         if b and sum(b):
             rows.append(("vs prior-4 avg", f"{a / (sum(b) / len(b)) - 1:+.1%}", ""))
-        rows.append(("Crop year starts", MONTHS[START - 1], ""))
         html = "<div class='filter-stat'>" + "".join(
             f"{l}: <b>{v}</b>" + (f" <span style='color:#7a86a8;'>({s})</span>" if s else "") + "<br>" for l, v, s in rows) + "</div>"
         st.markdown(html, unsafe_allow_html=True)
