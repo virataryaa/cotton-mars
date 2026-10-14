@@ -4,7 +4,7 @@ Daily US cotton classing (AMS MARS report 1652, Daily Cotton Quality Summary by 
 
 - `Ingestion/mars_ingest.py` - incremental fetch of all reports below (`--report X`, `--backfill`), upserts parquets in `Database/`
 - `Database/` - parquet (latest published row per period/commodity/state/start/end)
-- `Dashboard/app.py` - Streamlit (seasonal + time series)
+- `Dashboard/app.py` - Streamlit: Classing (season pace, by state, by office, daily pulse), Quality, Spot & Basis, Forward Contracting
 - `Automator/run_update.bat` - daily ingest + git push (schedule ~08:30)
 - Key: `MARS_API_KEY` in `.env` (git-ignored) or as Streamlit secret/env var
 
@@ -16,3 +16,6 @@ Daily US cotton classing (AMS MARS report 1652, Daily Cotton Quality Summary by 
 - `mars_1613` - Forward Contracting Report, monthly (2018-)
 Not ingested (large): 3804 spot differences / tenderable differences (~3k rows per day).
 Other cotton slugs: 1646/1654 weekly quality, 1658/1659 annual and monthly quality, 3895/3896 price stats.
+- `mars_1654_colorleaf`, `mars_1654_summary` - weekly quality by state (colour/leaf %, tenderable/eligible %), 2015-
+- `mars_3895_monthly` - monthly spot price stats by market (Aug 2025-)
+- Crop year start month is picked from the data (Aug: first month with real classing volume)

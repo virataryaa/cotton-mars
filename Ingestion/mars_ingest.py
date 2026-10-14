@@ -56,10 +56,26 @@ REPORTS = {
                  key=["market_location_name", "commodity", "report_begin_date", "report_end_date"],
                  keep=None, num=None, ts="published_date", sort=["market_location_name", "commodity", "report_begin_date"],
                  desc="Forward Contracting Report (monthly)"),
+    "1654_colorleaf": dict(file="mars_1654_colorleaf.parquet", slug=1654, section="Color Leaf",
+                           start=date(2015, 1, 1), chunk_months=12,
+                           key=["commodity", "gin_State", "color_Grade", "leaf_Grade", "report_end_date"],
+                           keep=None, num=["week_Percent", "season_Percent"], ts="published_date",
+                           sort=["commodity", "gin_State", "report_end_date", "color_Grade", "leaf_Grade"],
+                           desc="Weekly Quality by State - colour/leaf % (week and season)"),
+    "1654_summary": dict(file="mars_1654_summary.parquet", slug=1654, section="Summary",
+                         start=date(2015, 1, 1), chunk_months=12,
+                         key=["commodity", "gin_State", "report_Period", "report_end_date"],
+                         keep=None, num=["gin_Count", "tenderable_Percent", "eligible_Percent", "bales_Count"],
+                         ts="published_date", sort=["commodity", "gin_State", "report_Period", "report_end_date"],
+                         desc="Weekly Quality by State - tenderable/eligible %, bales, gins"),
+    "3895_monthly": dict(file="mars_3895_monthly.parquet", slug=3895, section="Monthly Summary",
+                         start=date(2015, 1, 1), chunk_months=12,
+                         key=["commodity", "market", "report_Begin_Date"], keep=None, num=None, ts=None,
+                         sort=["market", "report_Begin_Date"], desc="Monthly spot price statistics by market"),
 }
 DROP_META = {"report_title", "slug_name", "slug_id", "market_type", "market_type_category", "market_location_city",
              "group", "category", "final_ind", "report_section", "special_notes", "office_state", "office_city",
-             "market_location_name_x"}
+             "market_location_name_x", "community", "publish_volume", "publish_number", "comments"}
 
 
 def load_key():
