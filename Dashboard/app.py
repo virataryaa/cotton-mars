@@ -24,6 +24,15 @@ body, .main { color:#1a1a2e; }
     padding:8px 20px !important; font-weight:600; border:none !important; }
 .stTabs [aria-selected="true"] { background:#0a2463 !important; color:#ffffff !important; }
 .stTabs [data-baseweb="tab-highlight"], .stTabs [data-baseweb="tab-border"] { display:none !important; }
+.stTabs [data-baseweb="tab"] { padding:5px 16px !important; font-size:13px; min-height:0 !important; height:auto !important; }
+.stTabs [data-baseweb="tab-list"] { padding:3px; }
+/* sub-tabs: slim underline style */
+.stTabs .stTabs [data-baseweb="tab-list"] { background:transparent; border-radius:0; padding:0; gap:2px; display:flex;
+    border-bottom:1px solid #dfe3ee; width:100%; }
+.stTabs .stTabs [data-baseweb="tab"] { border-radius:0 !important; padding:4px 14px !important; font-size:12.5px; font-weight:500;
+    color:#7a86a8 !important; border-bottom:2px solid transparent !important; margin-bottom:-1px; }
+.stTabs .stTabs [aria-selected="true"] { background:transparent !important; color:#0a2463 !important; font-weight:700;
+    border-bottom:2px solid #0a2463 !important; }
 div[role="radiogroup"] { background:#eef0f6; padding:4px; border-radius:999px; gap:2px; display:inline-flex; flex-wrap:wrap; }
 div[role="radiogroup"] label { background:transparent !important; border-radius:999px !important; padding:4px 12px !important; margin:0 !important; }
 div[role="radiogroup"] label[data-baseweb="radio"] > div:first-child { display:none; }
