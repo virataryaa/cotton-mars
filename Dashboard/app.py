@@ -61,13 +61,16 @@ table.mt td.dim { color:#9aa3bd; font-style:italic; }
 
 
 # ── data ─────────────────────────────────────────────────────────────────────
+STAMP = max(f.stat().st_mtime for f in DB.glob("*.parquet"))   # cache key: reload when any parquet changes
+
+
 @st.cache_data(ttl=3600)
-def rd(name):
+def rd(name, stamp=STAMP):
     return pd.read_parquet(DB / f"mars_{name}.parquet")
 
 
 @st.cache_data(ttl=3600)
-def get_series(comm, kind, name, period, col):
+def get_series(comm, kind, name, period, col, stamp=STAMP):
     """Observed series indexed by endDate. kind: US | State | Office."""
     if kind == "State":
         d = rd("1652")
@@ -84,7 +87,7 @@ def get_series(comm, kind, name, period, col):
 
 
 @st.cache_data(ttl=3600)
-def names(kind):
+def names(kind, stamp=STAMP):
     if kind == "State":
         n = rd("1652")["classing_State"].unique()
         return sorted(x for x in n if x != "United States All Cotton")
