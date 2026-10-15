@@ -171,6 +171,8 @@ def run(name, cfg, session, backfill, limit_days):
     if new.empty:
         print("  no data returned")
         return
+    if old is not None and "source" in old.columns:       # tables merged with legacy history tag new rows
+        new["source"] = "api"
     out = upsert(old, new, cfg)
     DB_DIR.mkdir(exist_ok=True)
     out.to_parquet(path, index=False)

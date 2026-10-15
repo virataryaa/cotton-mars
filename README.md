@@ -11,7 +11,7 @@ Daily US cotton classing (AMS MARS report 1652, Daily Cotton Quality Summary by 
 ## Reports (Database/)
 - `mars_1652` - Daily Cotton Quality Summary by State (2018-)
 - `mars_1625` - Daily Cotton Quality Summary by Office (2015-)
-- `mars_3804_basis` - Daily Spot Cotton: basis and bales by spot market (Dec 2024-)
+- `mars_3804_basis` - Daily Spot Cotton: basis and bales by spot market (API Dec 2024-; legacy 41-4-34 basis Aug 2011-Oct 2024 merged via `Ingestion/merge_old_basis.py`, `source` column; gap Oct 2024-Jul 2025)
 - `mars_3804_futures` - Daily Spot Cotton: ICE CT settlements by contract (Dec 2024-)
 - `mars_1613` - Forward Contracting Report, monthly (2018-)
 Not ingested (large): 3804 spot differences / tenderable differences (~3k rows per day).

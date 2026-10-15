@@ -504,18 +504,20 @@ with t_spot:
         sel = c1.multiselect("Markets", mk, default=mk[:1], label_visibility="collapsed")
         grade = c2.radio("Grade", ["41-4-34", "31-3-36"], horizontal=True, label_visibility="collapsed")
         kindv = c3.radio("Show", ["Basis", "Base price"], horizontal=True, label_visibility="collapsed")
-        rng = st.radio("Range", ["3M", "6M", "12M", "All"], index=2, horizontal=True, label_visibility="collapsed")
+        rng = st.radio("Range", ["3M", "6M", "12M", "5Y", "All"], index=2, horizontal=True, label_visibility="collapsed")
         col = {("41-4-34", "Basis"): "basis_41_4_34", ("31-3-36", "Basis"): "basis_31_3_36",
                ("41-4-34", "Base price"): "41_4_34_Base_Price", ("31-3-36", "Base price"): "31_3_36_Base_Price"}[(grade, kindv)]
         if bs.empty or not sel:
             st.info("No data for this selection.")
         else:
             last = bs["report_Begin_Date"].max()
-            lo = last - timedelta(days={"3M": 91, "6M": 182, "12M": 365, "All": 9999}[rng])
+            lo = last - timedelta(days={"3M": 91, "6M": 182, "12M": 365, "5Y": 1826, "All": 99999}[rng])
             fig = go.Figure()
             for i, m in enumerate(sel):
                 y = bs[(bs["spotMarket"] == m) & (bs["report_Begin_Date"] >= lo)].dropna(subset=[col])
-                fig.add_trace(go.Scatter(x=y["report_Begin_Date"], y=y[col], name=m,
+                gaps = y["report_Begin_Date"].diff().dt.days > 10      # break the line across data gaps
+                y = pd.concat([y, y[gaps].assign(**{col: float("nan")}, report_Begin_Date=lambda z: z["report_Begin_Date"] - timedelta(days=1))])                     .sort_values("report_Begin_Date")
+                fig.add_trace(go.Scatter(x=y["report_Begin_Date"], y=y[col], name=m, connectgaps=False,
                                          line=dict(color=[NAVY, RED, TEAL, AMBER, GREEN, GREY, "#6b4fa0", "#333"][i % 8], width=2)))
             st.plotly_chart(line_layout(fig, f"{grade} {kindv.lower()} ({'points off ICE' if kindv == 'Basis' else 'cents/lb'})", 360),
                             width="stretch")
@@ -523,7 +525,7 @@ with t_spot:
             rows = []
             for m in mk:
                 y = bs[bs["spotMarket"] == m].dropna(subset=[col]).set_index("report_Begin_Date")[col]
-                if y.empty:
+                if y.empty or y.index.max() != last:      # skip legacy-only markets
                     continue
                 prev = lambda n: y[y.index <= y.index.max() - timedelta(days=n)]
                 w, mo = prev(7), prev(30)
